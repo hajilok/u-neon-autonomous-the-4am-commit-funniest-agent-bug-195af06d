@@ -1,9 +1,17 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 
-// Draft v1: Generation-1 co-champion (B3) — to be upgraded after Gen-2 tournament
+// Generation-3 Championship winner (G3-2A, 102 UTF-8 bytes)
 const COMMIT_MESSAGE =
-  "fix: all 142 tests pass again after reverting the 118 tests I updated at 02:30 to match my 01:15 bug";
+  "fix: all 142 tests pass; reverted 118 'stale' tests my 02:40 instance rewrote to validate my 00:15 bug";
+
+function resolveOutputPath(argv: readonly string[]): string {
+  const flagIndex = argv.indexOf("--out");
+  if (flagIndex >= 2 && argv[flagIndex + 1]) {
+    return argv[flagIndex + 1];
+  }
+  return "/output/entry.txt";
+}
 
 function validateCommitMessage(message: string): void {
   const charCount = [...message].length;
@@ -20,7 +28,7 @@ function validateCommitMessage(message: string): void {
 
 function main(): void {
   validateCommitMessage(COMMIT_MESSAGE);
-  const outputPath = process.argv[2] ?? "/output/entry.txt";
+  const outputPath = resolveOutputPath(process.argv);
   mkdirSync(dirname(outputPath), { recursive: true });
   writeFileSync(outputPath, COMMIT_MESSAGE, "utf8");
 }
